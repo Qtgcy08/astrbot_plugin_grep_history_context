@@ -4,37 +4,18 @@
 
 ## 架构
 
-```
-                      ┌──────────────────┐
-                      │  LLM / Tool 调用  │
-                      │  grepHistoryContext │
-                      └────────┬─────────┘
-                               │
-                    ┌──────────▼──────────┐
-                    │  _ensure_fts_index   │   ← 每次搜索前检查增量
-                    │  线程安全 · 幂等     │
-                    └──────────┬──────────┘
-                               │
-          ┌────────────────────┼────────────────────┐
-          ▼                    ▼                    ▼
-  ┌───────────────┐   ┌───────────────┐   ┌────────────────┐
-  │ conversations_fts│  │   pmh_fts     │   │  fts_meta      │
-  │ 对话上下文       │   │ 平台消息历史   │   │ conv_max_rowid │
-  │ FTS5 索引       │   │ FTS5 索引     │   │ pmh_max_rowid  │
-  └───────┬───────┘   └───────┬───────┘   └────────────────┘
-          │                   │
-          └───────┬───────────┘
-                  ▼
-          ┌───────────────┐
-          │ set 合并去重   │
-          │ conversation_id │
-          └───────┬───────┘
-                  ▼
-          ┌───────────────┐
-          │ 加载对话全文   │
-          │ 消息级二次匹配  │
-          │ 格式化输出     │
-          └───────────────┘
+```mermaid
+flowchart TD
+    A["LLM / Tool 调用<br/>grepHistoryContext"] --> B["_ensure_fts_index<br/>每次搜索前检查增量 · 线程安全 · 幂等"]
+
+    B --> C["conversations_fts<br/>对话上下文 · FTS5 索引"]
+    B --> D["pmh_fts<br/>平台消息历史 · FTS5 索引"]
+    B --> E["fts_meta<br/>conv_max_rowid · pmh_max_rowid"]
+
+    C --> F["set 合并去重<br/>conversation_id"]
+    D --> F
+
+    F --> G["加载对话全文 → 消息级二次匹配 → 格式化输出"]
 ```
 
 ## 为什么需要双索引？
@@ -143,7 +124,7 @@ core/data/plugin_data/astrbot_plugin_grep_history_context/
 
 ## 作者
 
-闻人墨
+QTY & AstrBot
 
 ## 仓库
 
