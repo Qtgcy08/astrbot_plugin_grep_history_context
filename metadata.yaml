@@ -1,0 +1,7 @@
+name: astrbot_plugin_grep_history_context
+display_name: Grep History Context
+desc: 提供 grepHistoryContext 工具，搜索本 AstrBot 实例内所有对话上下文
+version: v3.0.0
+author: 闻人墨
+repo: https://github.com/Qtgcy08/astrbot_plugin_grep_history_context
+short_desc: 跨会话对话内容搜索工具

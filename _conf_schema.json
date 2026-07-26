@@ -1,0 +1,8 @@
+{
+  "admin_only": {
+    "type": "bool",
+    "description": "是否仅允许管理员查询其他用户的对话",
+    "default": true,
+    "required": true
+  }
+}
